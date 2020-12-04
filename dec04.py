@@ -4,8 +4,8 @@ import typing
 
 class Passport(dict):
     _REQUIRED_FIELDS = frozenset({'byr', 'iyr', 'eyr', 'hgt', 'hcl', 'ecl', 'pid'})
-    _HCL_RE = re.compile(r'^#([0-9a-f]{6})$')
-    _ECLS = frozenset({'amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth'})
+    _HEX_COLOR_RE = re.compile(r'^#([0-9a-f]{6})$')
+    _EYE_COLORS = frozenset({'amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth'})
 
     def __init__(self, passport_text: str):
         super().__init__()
@@ -35,18 +35,17 @@ class Passport(dict):
         return True
 
     def is_hair_color_valid(self):
-        return Passport._HCL_RE.match(self['hcl'])
+        return Passport._HEX_COLOR_RE.match(self['hcl'])
 
     def is_eye_color_valid(self):
-        return self['ecl'] in Passport._ECLS
+        return self['ecl'] in Passport._EYE_COLORS
 
     def is_pid_valid(self):
         return self['pid'].isnumeric() and len(self['pid']) == 9
 
     def is_valid(self):
-        if not self.has_required_fields:
-            return False
         try:
+            assert self.has_required_fields
             assert self.is_year_valid('byr', 1920, 2002)
             assert self.is_year_valid('iyr', 2010, 2020)
             assert self.is_year_valid('eyr', 2020, 2030)
