@@ -12,8 +12,7 @@ class Passport(dict):
         for field in passport_text.rstrip().split(' '):
             key, value = field.split(':')
             self[key] = value.strip()
-        self._keys = frozenset(self.keys())
-        self.has_required_fields = Passport._REQUIRED_FIELDS.issubset(self._keys)
+        self.has_required_fields = Passport._REQUIRED_FIELDS.issubset(self.keys())
 
     def is_year_valid(self, key: str, minimum: int, maximum: int):
         try:
