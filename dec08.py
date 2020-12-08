@@ -18,7 +18,7 @@ class BootCode:
                     accumulator += arg
             elif op == 'jmp':
                 i += arg
-        return accumulator, i
+        return accumulator, i == len(self.code)
 
     def debug_infinite_loop(self):
         accumulator, _ = self.execute()
@@ -29,9 +29,9 @@ class BootCode:
             if op in ('nop', 'jmp'):
                 new_op = 'jmp' if op == 'nop' else 'nop'
                 self.code[i] = (new_op, arg)
-                accumulator, last_index = self.execute()
+                accumulator, was_exit_success = self.execute()
                 self.code[i] = (op, arg)
-                if last_index == len(self.code):
+                if was_exit_success:
                     return accumulator
 
 
