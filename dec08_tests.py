@@ -100,7 +100,7 @@ of the accumulator after the program terminates?
 
 import unittest
 
-from dec08 import solve, BootCode
+from dec08 import solve, BootCode, NO_OPERATION, ACCUMULATE, JUMP
 
 
 class December08Test(unittest.TestCase):
@@ -118,15 +118,15 @@ acc +6"""
         boot_code = BootCode(December08Test._EXAMPLE)
 
         expected = [
-            ('nop', 0),
-            ('acc', 1),
-            ('jmp', 4),
-            ('acc', 3),
-            ('jmp', -3),
-            ('acc', -99),
-            ('acc', 1),
-            ('jmp', -4),
-            ('acc', 6)
+            (NO_OPERATION, 0),
+            (ACCUMULATE, 1),
+            (JUMP, 4),
+            (ACCUMULATE, 3),
+            (JUMP, -3),
+            (ACCUMULATE, -99),
+            (ACCUMULATE, 1),
+            (JUMP, -4),
+            (ACCUMULATE, 6)
         ]
         self.assertListEqual(expected, boot_code.code)
 
