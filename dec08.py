@@ -5,13 +5,12 @@ class BootCode:
             op, arg = line.split(' ')
             self.code.append((op, int(arg)))
 
-    @staticmethod
-    def execute(code):
+    def execute(self):
         accumulator = 0
-        visited = [False] * len(code)
+        visited = [False] * len(self.code)
         i = 0
         while i < len(visited) and not visited[i]:
-            op, arg = code[i]
+            op, arg = self.code[i]
             visited[i] = True
             if op == 'acc' or op == 'nop':
                 i += 1
@@ -22,18 +21,17 @@ class BootCode:
         return accumulator, i
 
     def debug_infinite_loop(self):
-        accumulator, _ = self.execute(self.code)
+        accumulator, _ = self.execute()
         return accumulator
 
     def hotfix_boot_code(self):
-        for i, op_arg in enumerate(self.code):
-            op, arg = op_arg
-            if op == 'nop' or op == 'jmp':
-                code = list(self.code)
+        for i, (op, arg) in enumerate(self.code):
+            if op in ('nop', 'jmp'):
                 new_op = 'jmp' if op == 'nop' else 'nop'
-                code[i] = (new_op, arg)
-                accumulator, last_index = self.execute(code)
-                if last_index == len(code):
+                self.code[i] = (new_op, arg)
+                accumulator, last_index = self.execute()
+                self.code[i] = (op, arg)
+                if last_index == len(self.code):
                     return accumulator
 
 
